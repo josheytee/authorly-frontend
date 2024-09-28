@@ -15,6 +15,7 @@ const AuthorList = () => {
         setAuthors(response.data);
         setLoading(false);
       } catch (err) {
+        console.log(err);
         setError("Failed to fetch authors.");
         setLoading(false);
       }
@@ -27,6 +28,7 @@ const AuthorList = () => {
       await deleteAuthor(id);
       setAuthors(authors.filter((author) => author.id !== id));
     } catch (err) {
+      console.log(err);
       setError("Failed to delete author.");
     }
   };

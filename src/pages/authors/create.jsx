@@ -13,6 +13,7 @@ const CreateAuthor = () => {
       await createAuthor({ name });
       router.push("/authors");
     } catch (err) {
+      console.log(err);
       setError("Failed to create author.");
     }
   };

@@ -22,6 +22,7 @@ const EditBook = () => {
           setAuthorId(book.author_id);
         }
       } catch (err) {
+        console.log(err);
         setError("Failed to fetch book details.");
       }
     };
@@ -37,6 +38,7 @@ const EditBook = () => {
       await updateBook(id, { title, author_id: authorId });
       router.push("/books"); // Navigate back to the books list after successful update
     } catch (err) {
+      console.log(err);
       setError("Failed to update book.");
     }
   };

@@ -18,11 +18,12 @@ const Register = () => {
     // Fetch CSRF token from the server
     const fetchCsrfToken = async () => {
       try {
-        const token = document
-          .querySelector('meta[name="csrf-token"]')
-          .getAttribute("content");
+        // const token = document
+        //   .querySelector('meta[name="csrf-token"]')
+        //   .getAttribute("content");
         // Set token logic here if necessary
       } catch (err) {
+        console.log(err);
         setErrors({
           error: ["An error occurred while fetching CSRF token."],
         });

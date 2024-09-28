@@ -20,6 +20,7 @@ const EditAuthor = () => {
         );
         if (author) setName(author.name);
       } catch (err) {
+        console.log(err);
         setError("Failed to fetch author details.");
       }
     };
@@ -35,6 +36,7 @@ const EditAuthor = () => {
       await updateAuthor(id, { name });
       router.push("/authors"); // Navigate back to the authors list after successful update
     } catch (err) {
+      console.log(err);
       setError("Failed to update author.");
     }
   };
