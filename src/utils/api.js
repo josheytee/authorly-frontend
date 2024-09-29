@@ -1,6 +1,7 @@
 
 export async function apiFetch(url, method, token, body = null) {
-    const domain = "http://127.0.0.1:8000"
+    // const domain = "http://127.0.0.1:8000"
+    const domain = "https://retrievalprime.com/public/authorly/public/api/login"
     const options = {
         method,
         headers: {

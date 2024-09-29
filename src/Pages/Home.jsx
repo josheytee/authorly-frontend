@@ -7,19 +7,6 @@ export default function Home() {
   const [books, setBooks] = useState([]);
   const { token } = useContext(AppContext);
 
-  async function getAuthors() {
-    try {
-      const data = await apiFetch("/api/authors", "GET", token);
-      setAuthors(data); // Set authors from the response
-    } catch (error) {
-      console.error("Error fetching authors:", error);
-    }
-  }
-
-  useEffect(() => {
-    getAuthors();
-  }, [token]); // Refetch when token changes
-
   async function getBooks() {
     try {
       const data = await apiFetch("/api/books", "GET", token);

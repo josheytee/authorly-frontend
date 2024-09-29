@@ -18,12 +18,7 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const data = await apiFetch(
-        "http://127.0.0.1:8000/api/login",
-        "POST",
-        null,
-        formData
-      );
+      const data = await apiFetch("/api/login", "POST", null, formData);
 
       // Assuming the API returns a token upon successful login
       localStorage.setItem("token", data.token);

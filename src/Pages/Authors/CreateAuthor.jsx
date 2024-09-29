@@ -15,23 +15,19 @@ export default function CreateAuthor() {
   async function handleCreate(e) {
     e.preventDefault();
 
-    const res = await fetch("http://127.0.0.1:8000/api/authors", {
-      method: "post",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json", // Set the content type
-      },
-      body: JSON.stringify(formData),
-    });
-
-    const data = await res.json();
-
-    if (data.errors) {
-      setErrors(data.errors);
-    } else {
-      navigate("/");
+    try {
+      const data = await apiFetch("/api/authors", "POST", token, formData);
+      navigate("/"); // Navigate on successful creation
+    } catch (error) {
+      // Handle validation errors
+      if (error.message.includes("validation")) {
+        setErrors(error.errors);
+      } else {
+        console.error("Error creating author:", error);
+      }
     }
   }
+
   return (
     <>
       <h1 className="title">Create a new Author</h1>
