@@ -10,8 +10,8 @@ import Create from "./Pages/Posts/Create";
 import CreateBook from "./Pages/Books/CreateBook";
 import CreateAuthor from "./Pages/Authors/CreateAuthor";
 import BookList from "./Pages/Books/BookList";
-import Show from "./Pages/Posts/Show";
-import Update from "./Pages/Posts/Update";
+import ShowBook from "./Pages/Books/ShowBook";
+import UpdateBook from "./Pages/Books/UpdateBook";
 import "./App.css";
 
 export default function App() {
@@ -30,8 +30,12 @@ export default function App() {
             path="/books/create"
             element={user ? <CreateBook /> : <Login />}
           />
-          <Route path="/books/:id" element={user ? <Create /> : <Login />} />
+          <Route path="/books/:id" element={user ? <ShowBook /> : <Login />} />
           <Route path="/books" element={user ? <BookList /> : <Login />} />
+          <Route
+            path="/books/update/:id"
+            element={user ? <UpdateBook /> : <Login />}
+          />
 
           <Route
             path="/authors/create"
@@ -42,12 +46,7 @@ export default function App() {
 
           <Route path="/create" element={user ? <Create /> : <Login />} />
 
-          <Route path="/posts/:id" element={<Show />} />
-
-          <Route
-            path="/posts/update/:id"
-            element={user ? <Update /> : <Login />}
-          />
+          {/* <Route path="/posts/:id" element={<Show />} /> */}
         </Route>
       </Routes>
     </BrowserRouter>

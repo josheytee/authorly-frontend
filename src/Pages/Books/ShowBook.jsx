@@ -1,70 +1,62 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../../Context/AppContext";
+import { apiFetch } from "../../utils/api";
 
-export default function Show() {
+export default function ShowBook() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, token } = useContext(AppContext);
 
-  const [post, setPost] = useState(null);
+  const [book, setBook] = useState(null);
 
-  async function getPost() {
-    const res = await fetch(`/api/posts/${id}`);
-    const data = await res.json();
-
-    if (res.ok) {
-      setPost(data.post);
+  async function getBook() {
+    try {
+      const data = await apiFetch(`/api/books/${id}`, "GET", token);
+      setBook(data); // Set books from the response
+    } catch (error) {
+      console.error("Error fetching books:", error);
     }
   }
 
   async function handleDelete(e) {
     e.preventDefault();
 
-    if (user && user.id === post.user_id) {
-      const res = await fetch(`/api/posts/${id}`, {
-        method: "delete",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    // if (user && user.id === post.user_id) {
 
-      const data = await res.json();
-
-      if (res.ok) {
-        navigate("/");
-      }
-
-      console.log(data);
+    const data = await apiFetch(`/api/books/${id}`, "DELETE", token);
+    if (data) {
+      navigate("/");
     }
+    // }
   }
 
   useEffect(() => {
-    getPost();
+    getBook();
   }, []);
 
   return (
     <>
-      {post ? (
+      {book ? (
         <div
-          key={post.id}
+          key={book.id}
           className="mt-4 p-4 border rounded-md border-dashed border-slate-400"
         >
           <div className="mb-2 flex items-start justify-between">
             <div>
-              <h2 className="font-bold text-2xl">{post.title}</h2>
+              <h2 className="font-bold text-2xl">{book.title}</h2>
               <small className="text-xs text-slate-600">
-                Created by {post.user.name} on{" "}
-                {new Date(post.created_at).toLocaleTimeString()}
+                Created by {book.author.name} on{" "}
+                {new Date(book.created_at).toLocaleTimeString()}
               </small>
             </div>
           </div>
-          <p>{post.body}</p>
+          <p>{book.description}</p>
 
-          {user && user.id === post.user_id && (
+          {user && (
             <div className="flex items-center justify-end gap-4">
               <Link
-                to={`/posts/update/${post.id}`}
+                to={`/books/update/${book.id}`}
                 className="bg-green-500 text-white text-sm rounded-lg px-3 py-1"
               >
                 Update
@@ -79,7 +71,7 @@ export default function Show() {
           )}
         </div>
       ) : (
-        <p className="title">Post not found!</p>
+        <p className="title">Book not found!</p>
       )}
     </>
   );

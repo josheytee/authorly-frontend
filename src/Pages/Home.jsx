@@ -2,8 +2,10 @@ import { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { AppContext } from "../Context/AppContext";
 import { apiFetch } from "../utils/api"; // Import the apiFetch utility
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
+  const navigate = useNavigate();
   const [books, setBooks] = useState([]);
   const { token } = useContext(AppContext);
 
@@ -17,6 +19,9 @@ export default function Home() {
   }
 
   useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
     getBooks();
   }, [token]); // Add token as a dependency
 

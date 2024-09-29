@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-
+import { apiFetch } from "../utils/api";
 export const AppContext = createContext();
 
 export default function AppProvider({ children }) {
@@ -7,14 +7,8 @@ export default function AppProvider({ children }) {
   const [user, setUser] = useState(null);
 
   async function getUser() {
-    const res = await fetch("http://127.0.0.1:8000/api/user", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await res.json();
-
-    if (res.ok) {
+    const data = await apiFetch("/api/user", "GET", token);
+    if (data) {
       setUser(data);
     }
   }

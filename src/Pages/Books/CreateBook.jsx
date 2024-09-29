@@ -2,7 +2,7 @@
 
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../Context/AppContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { apiFetch } from "../../utils/api";
 
 export default function CreateBook() {
@@ -48,7 +48,6 @@ export default function CreateBook() {
   return (
     <>
       <h1 className="title">Create a new Book</h1>
-
       <form onSubmit={handleCreate} className="w-1/2 mx-auto space-y-6">
         <div>
           <input
@@ -95,6 +94,11 @@ export default function CreateBook() {
 
         <button className="primary-btn">Create</button>
       </form>
+      <div className="w-1/2 mx-auto mt-5 space-y-6">
+        <Link to={`/authors/create`} className="bg-gray-500 primary-btn">
+          Or Create Author
+        </Link>
+      </div>
     </>
   );
 }
