@@ -6,11 +6,16 @@ export default function Layout() {
   const { user, token, setUser, setToken } = useContext(AppContext);
   const navigate = useNavigate();
 
+  // Helper function to delete cookie
+  function deleteCookie(name) {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+  }
+
   async function handleLogout(e) {
     e.preventDefault();
 
     const res = await fetch("/api/logout", {
-      method: "post",
+      method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -20,9 +25,14 @@ export default function Layout() {
     console.log(data);
 
     if (res.ok) {
+      // Clear user and token in context
       setUser(null);
       setToken(null);
-      localStorage.removeItem("token");
+
+      // Delete the token cookie
+      deleteCookie("token");
+
+      // Navigate to the home page after logout
       navigate("/");
     }
   }

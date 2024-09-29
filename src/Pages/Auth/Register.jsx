@@ -1,6 +1,14 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../Context/AppContext";
+import { apiFetch } from "../../utils/api"; // Import the apiFetch utility
+
+// Helper function to set a cookie with expiration time
+function setCookie(name, value, minutes) {
+  const date = new Date();
+  date.setTime(date.getTime() + minutes * 60 * 1000);
+  document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
+}
 
 export default function Register() {
   const { setToken } = useContext(AppContext);
@@ -17,20 +25,14 @@ export default function Register() {
 
   async function handleRegister(e) {
     e.preventDefault();
-    const res = await fetch("http://127.0.0.1:8000/api/register", {
-      method: "post",
-      body: JSON.stringify(formData),
-      headers: {
-        "Content-Type": "application/json", // Set the content type
-      },
-    });
 
-    const data = await res.json();
+    const data = await apiFetch("/api/register", "POST", null, formData);
 
     if (data.errors) {
       setErrors(data.errors);
     } else {
-      localStorage.setItem("token", data.token);
+      // Set token in a cookie with an expiration of 60 minutes
+      setCookie("token", data.token, 60);
       setToken(data.token);
       navigate("/");
     }
