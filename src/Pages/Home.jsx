@@ -6,29 +6,64 @@ import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const navigate = useNavigate();
-  const [books, setBooks] = useState([]);
   const { token } = useContext(AppContext);
 
-  async function getBooks() {
+  const [books, setBooks] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(""); // Add state for search term
+  const [errors, setErrors] = useState({});
+
+  // Fetch books from the API, optionally including a search query
+  async function getBooks(query = "") {
     try {
-      const data = await apiFetch("/api/books", "GET", token);
+      const url = query ? `/api/books?search=${query}` : "/api/books";
+      const data = await apiFetch(url, "GET", token);
       setBooks(data); // Set books from the response
     } catch (error) {
+      setErrors(error.errors);
       console.error("Error fetching books:", error);
     }
   }
 
+  // Trigger fetching books when the component mounts or the search term changes
   useEffect(() => {
     if (!token) {
       navigate("/login");
     }
-    getBooks();
-  }, [token]); // Add token as a dependency
+    getBooks(searchTerm);
+  }, [token, searchTerm]); // Refetch books if token or searchTerm changes
+
+  // Handle search input change
+  function handleSearch(e) {
+    setSearchTerm(e.target.value);
+  }
 
   return (
     <>
       <h1 className="title">Latest Books</h1>
 
+      {/* Search input */}
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Search books..."
+          value={searchTerm}
+          onChange={handleSearch}
+          className="w-full px-3 py-2 border rounded-md"
+        />
+      </div>
+
+      {/* Show errors if any */}
+      {errors && (
+        <div className="error-messages">
+          {Object.values(errors).map((error, idx) => (
+            <p key={idx} className="error">
+              {error}
+            </p>
+          ))}
+        </div>
+      )}
+
+      {/* Book list */}
       {books.length > 0 ? (
         books.map((book) => (
           <div
@@ -54,7 +89,7 @@ export default function Home() {
           </div>
         ))
       ) : (
-        <p>There are no books yet</p>
+        <p>No books found</p>
       )}
     </>
   );
